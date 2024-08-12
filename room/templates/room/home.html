@@ -1,0 +1,47 @@
+{% extends "main.html" %}
+
+{% block title %}
+  Home Page
+{% endblock title %}
+
+{% block content %}
+  <h1>Hello, homepage</h1>
+
+  <a href="{% url 'create-room' %}">Create room</a>
+
+  <ul>
+
+    {% for items in data %}
+      <a href="{% url 'update-room' items.id %}">EDIT</a>
+      <a href="{% url 'delete-room' items.id %}">DELETE</a>
+      {% if items.host.username %}
+        <span>Host name: {{ items.host.username }}</span>
+      {% endif %}
+      <li>ID: {{items.id}}, Name: <a href="/room/{{items.id}}">{{items.name}}</a></li>
+      {% if items.topic %}
+        <span>Topic name: {{ items.topic }}</span>
+      {% endif %}
+      <hr>
+    {% endfor %}
+
+  </ul>
+
+
+  <h1>All topics</h1>
+  <ul>
+    <li>
+      <a href="{% url 'home' %}">
+        All
+      </a>
+    </li>
+    {% for items in topic %}
+
+      <li>
+        <a href="{% url 'home' %}?q={{items.name}}">
+          {{items.name}}
+        </a>
+      </li>
+      
+    {% endfor %}
+  </ul>
+{% endblock content %}
