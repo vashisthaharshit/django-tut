@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import *
 from .forms import RoomForm
 from django.db.models import Q
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 # Create your views here.
 
@@ -56,3 +58,27 @@ def deleteRoom(request, id):
         return redirect('home')
 
     return render(request, 'room/delete.html', {'obj': room})
+
+
+def userLoginRegister(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(username = username)
+
+        except:
+            messages.error(request, "No such user exist")
+
+        user = authenticate(request, username = username, password = password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, "Username and password don't match")
+    
+        
+    return render(request, 'room/login.html')
